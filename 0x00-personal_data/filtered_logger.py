@@ -4,6 +4,8 @@ this module contains user data management
 """
 from typing import List
 import logging
+import mysql.connector
+import os
 import re
 
 
@@ -50,6 +52,7 @@ class RedactingFormatter(logging.Formatter):
                             super(RedactingFormatter, self).format(record),
                             self.SEPARATOR)
 
+
 def get_logger() -> logging.Logger:
     """this method returns a user data logger"""
     log = logging.getLogger('user_data')
@@ -61,3 +64,13 @@ def get_logger() -> logging.Logger:
     stream_handler.setFormatter(formatter)
     log.addHandler(stream_handler)
     return log
+
+
+def get_db() -> mysql.connector.connection.MySQLConnection:
+    """get_db function that returns a connector to the database"""
+    db_connection = mysql.connector.connect(
+        user=os.getenv('PERSONAL_DATA_DB_USERNAME', 'root'),
+        password=os.getenv('PERSONAL_DATA_DB_PASSWORD', ''),
+        host=os.getenv('PERSONAL_DATA_DB_HOST', 'localhost'),
+        database=os.getenv('PERSONAL_DATA_DB_NAME'))
+    return db_connection
