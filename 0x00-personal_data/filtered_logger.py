@@ -1,4 +1,4 @@
-#!usr/bin/env python3
+#!/usr/bin/env python3
 """
 this module contains user data management
 """
@@ -59,9 +59,7 @@ def get_logger() -> logging.Logger:
     log.setLevel(logging.INFO)
     log.propagate = False
     stream_handler = logging.StreamHandler()
-    formatter = logging.Formatter(RedactingFormatter(fields=PII_FIELDS))
-    stream_handler.formatter(formatter)
-    stream_handler.setFormatter(formatter)
+    stream_handler.setFormatter(RedactingFormatter(PII_FIELDS))
     log.addHandler(stream_handler)
     return log
 
@@ -74,3 +72,28 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
         host=os.getenv('PERSONAL_DATA_DB_HOST', 'localhost'),
         database=os.getenv('PERSONAL_DATA_DB_NAME'))
     return db_connection
+
+
+def main() -> None:
+    """unction will obtain a database connection using get_db and retrieve
+    all rows in the users table and display each row under a filtered format
+    """
+    my_db = get_db()
+    cursor = my_db.cursor()
+    cursor.execute("SELECT * FROM users;")
+    data = cursor.fetchall()
+
+    log = get_logger()
+
+    for row in data:
+        fields = 'name={}; email={}; phone={}; ssn={}; password={}; ip={}; '\
+            'last_login={}; user_agent={};'
+        fields = fields.format(row[0], row[1], row[2], row[3],
+                               row[4], row[5], row[6], row[7])
+        log.info(fields)
+    cursor.close()
+    my_db.close()
+
+
+if __name__ == "__main__":
+    main()
