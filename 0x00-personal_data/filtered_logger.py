@@ -12,7 +12,7 @@ import re
 PII_FIELDS = ('name', 'password', 'phone', 'ssn', 'email')
 
 
-def filter_datum(fields: List, redaction: str, message: str,
+def filter_datum(fields: List[str], redaction: str, message: str,
                  separator: str) -> str:
     """
     this function returns the log message obfuscated - the function uses
@@ -27,9 +27,8 @@ def filter_datum(fields: List, redaction: str, message: str,
         the log message obfuscated
     """
     for field in fields:
-        pattern = "{}=.*?{}".format(field, separator)
         replace = "{}={}{}".format(field, redaction, separator)
-        message = re.sub(pattern, replace, message)
+        message = re.sub("{}=.*?{}".format(field, separator), replace, message)
     return message
 
 
