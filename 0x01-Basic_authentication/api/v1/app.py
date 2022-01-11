@@ -20,6 +20,11 @@ if getenv("AUTH_TYPE", None) == "auth":
     auth = Auth()
 
 
+if getenv("AUTH_TYPE", None) == "basic_auth":
+    from api.v1.auth.basic_auth import BasicAuth
+    auth = BasicAuth()
+
+
 @app.errorhandler(401)
 def unauthorized(error) -> str:
     """Unauthorized handler
