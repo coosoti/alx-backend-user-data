@@ -2,8 +2,9 @@
 """authentication template module
 """
 
+from os import getenv
 from flask import request
-from typing import List, Pattern, TypeVar
+from typing import List, TypeVar
 
 
 class Auth:
@@ -29,4 +30,12 @@ class Auth:
 
     def current_user(self, request=None) -> TypeVar('User'):
         """this method gets the current user"""
-        None
+        return None
+
+    def session_cookie(self, request=None):
+        """this function returns cookie value from a request
+        """
+        if request is None:
+            return None
+        _my_session_id = getenv("SESSION_NAME")
+        return request.cookies.get(_my_session_id)
