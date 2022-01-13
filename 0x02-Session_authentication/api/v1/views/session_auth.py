@@ -26,10 +26,10 @@ def login() -> str:
     else:
         from api.v1.app import auth
         _my_session_id = auth.create_session(user[0].id)
-        json_res = jsonify(user[0].to_json())
+        user_data = jsonify(user[0].to_json())
         session_name = getenv("SESSION_NAME")
-        json_res.set_cookie(session_name, _my_session_id)
-        return json_res
+        user_data.set_cookie(session_name, _my_session_id)
+        return user_data, 200
 
 
 @app_views.route('/auth_session/logout', methods=['DELETE'],
