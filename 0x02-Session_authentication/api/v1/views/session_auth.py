@@ -5,7 +5,6 @@ Session Views Module
 
 from os import getenv
 from flask import jsonify, request
-from api.v1.app import auth
 from api.v1.views import app_views
 from models.user import User
 
