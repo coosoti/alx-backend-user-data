@@ -9,6 +9,7 @@ from db import DB
 from sqlalchemy.orm.exc import NoResultFound
 from user import User
 from uuid import uuid4
+from typing import Union
 
 
 def _hash_password(password: str) -> bytes:
@@ -60,15 +61,15 @@ class Auth:
         except NoResultFound:
             return
 
-     def get_user_from_session_id(self, session_id: str) -> Union[str, None]:
-         """this method finds user by session_id"""
-         if not session_id:
-             return None
-         try:
-             user = self._db.find_user_by(session_id=session_id)
-             return user
-         except NoResultFound:
-             return None
+    def get_user_from_session_id(self, session_id: str) -> Union[str, None]:
+        """this method finds user by session_id"""
+        if not session_id:
+            return None
+        try:
+            user = self._db.find_user_by(session_id=session_id)
+            return user
+        except NoResultFound:
+            return None
 
     def destroy_session(self, user_id: str) -> None:
         """this method updates the corresponding user’s session ID to None"""
